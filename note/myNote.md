@@ -94,11 +94,15 @@ Spring Security:
             Session Management: .sessionManagement(...)
             Authentication Provider: .authenticationProvider(authenticationProvider)
             Custom Filter: .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-JWT Filter: The custom JWT filter validates the token first and sets the authentication context in SecurityContextHolder.
-Spring Security Filters: Once the context is set, Spring Security bypasses the UsernamePasswordAuthenticationFilter because the user is already authenticated.
-Authorization Filters: The authorization filters ensure the user has the appropriate permissions to access the resource.
-        
-            2:11:19
+            JWT Filter: The custom JWT filter validates the token first and sets the authentication context in SecurityContextHolder.
+            Spring Security Filters: Once the context is set, Spring Security bypasses the UsernamePasswordAuthenticationFilter because the user is already authenticated.
+            Authorization Filters: The authorization filters ensure the user has the appropriate permissions to access the resource.
+19-11-2024
+    controller
+        Authentication controller
+            @Valid to make a long story short, in your particular example code, ScriptFile class has some constraints defined for the class data members like
+             @NotNull, @NotEmpty, etc. and @Valid instructs the framework (spring in our case) to check these constraints 
+             against the parameter supplied when someone calls your method. In this case, if the validation fails, the server responds with an HTTP 400 Bad Request status code.
 
 
 
