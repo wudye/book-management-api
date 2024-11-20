@@ -38,10 +38,10 @@ server:
   port: 8088
 
 application:
-  file:
-    uploads:
-      photos-output-path: ./uploads
   security:
     jwt:
       secret-key: 37Rgu045T10PsB094pyRuU0eUBQReza4
       expiration: 864000,
+    mailing:
+      frontend:
+        activation_url: http://localhost:4200/activate-account

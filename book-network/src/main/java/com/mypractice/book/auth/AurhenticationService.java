@@ -1,12 +1,15 @@
 package com.mypractice.book.auth;
 
 import com.mypractice.book.email.EmailService;
+import com.mypractice.book.email.EmailTemplateName;
 import com.mypractice.book.role.RoleRepository;
 import com.mypractice.book.user.Token;
 import com.mypractice.book.user.TokenRepository;
 import com.mypractice.book.user.User;
 import com.mypractice.book.user.UserRepository;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +26,11 @@ public class AurhenticationService {
         private final UserRepository userRepository;
         private final TokenRepository tokenRepository;
         private final EmailService emailService;
+        @Value("${apllication.mailing.frontend.activation_url}")
+        private String acticationUrl;
 
 
-    public void register(RegistrationRequest request) {
+    public void register(RegistrationRequest request) throws MessagingException {
         var userRole = roleRepository.findByName("USER")
                 .orElseThrow(()->new RuntimeException("user no found"));
         var user = User.builder()
@@ -42,8 +47,17 @@ public class AurhenticationService {
         sendValidationEmail(user);
     }
 
-    private void sendValidationEmail(User user) {
+    private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
+        emailService.sendEmail(
+                user.getEmail(),
+                user.fullName(),
+                EmailTemplateName.ACTIVATE_ACCOUNT,
+                acticationUrl,
+                newToken,
+                "Account activation"
+
+        );
 
     }
 
